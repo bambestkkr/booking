@@ -1,6 +1,6 @@
 {
-  "name": "APP BookADV",
-  "short_name": "ฺฺBookAdv",
+  "name": "จองพบครู",
+  "short_name": "ฺฺจองพบครู",
   "description": "เว็บจองให้คำปรึกษา",
   "start_url": "./index.html",
   "scope": "./",
