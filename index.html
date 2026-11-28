@@ -72,7 +72,7 @@
             <span id="conn-status-text" class="truncate max-w-[230px] sm:max-w-none">เชื่อมต่อ Google Sheets จริงแล้ว</span>
         </div>
         <div class="flex items-center space-x-2">
-            <span id="db-version-badge" class="bg-purple-100 text-purple-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">DB v2.1</span>
+            <span id="db-version-badge" class="bg-purple-100 text-purple-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">DB v2.2</span>
             <button id="btn-install-pwa" onclick="installPWA()" class="hidden bg-gradient-to-r from-pink-400 to-purple-400 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm">
                 📲 ติดตั้งลงหน้าจอ
             </button>
@@ -305,7 +305,7 @@
                         จัดการคิวจอง <span id="badge-pending-count" class="ml-1 bg-rose-400 text-white text-xs px-2 py-0.5 rounded-full">0</span>
                     </button>
                     <button onclick="switchAdminTab('dashboard')" id="adm-tab-dashboard" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">แดชบอร์ดสถิติ</button>
-                    <button onclick="switchAdminTab('completed')" id="adm-tab-completed" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">ประวัติให้คำปรึกษา</button>
+                    <button onclick="switchAdminTab('completed')" id="adm-tab-completed" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">ประวัติเข้าพบ / ผิดนัด</button>
                     <button onclick="switchAdminTab('report')" id="adm-tab-report" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">รายงาน A4</button>
                     <button onclick="switchAdminTab('students')" id="adm-tab-students" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">ข้อมูลนักเรียน</button>
                     <button onclick="switchAdminTab('topics')" id="adm-tab-topics" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">หัวข้อปรึกษา</button>
@@ -325,32 +325,48 @@
                     <div id="adm-content-dashboard" class="hidden space-y-6">
                         <div class="flex flex-wrap justify-between items-center gap-4">
                             <div>
-                                <h3 class="text-xl font-extrabold text-slate-800">สรุปสถิติภาพรวมห้อง 1204</h3>
-                                <p class="text-sm text-slate-500">ข้อมูลการนัดหมายและสถิติการให้คำปรึกษานักเรียน</p>
+                                <h3 class="text-xl font-extrabold text-slate-800">สรุปสถิติภาพรวมและการมาตามนัด</h3>
+                                <p class="text-sm text-slate-500">ข้อมูลการนัดหมาย สถิติการมาตามนัด และการผิดนัดของนักเรียน</p>
                             </div>
                             <button onclick="exportBookingsCSV()" class="bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-500 hover:to-emerald-500 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md shadow-emerald-100 flex items-center space-x-2 transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                 <span>ส่งออกรายงาน CSV</span>
                             </button>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                             <div class="bg-gradient-to-br from-sky-300 to-blue-400 text-white p-5 rounded-3xl shadow-lg shadow-sky-100">
-                                <span class="text-white/90 text-sm font-semibold">ยอดจองทั้งหมด</span>
+                                <span class="text-white/90 text-xs font-semibold">ยอดจองทั้งหมด</span>
                                 <h4 id="stat-total" class="text-3xl font-extrabold mt-2">0</h4>
                             </div>
                             <div class="bg-gradient-to-br from-amber-300 to-orange-400 text-white p-5 rounded-3xl shadow-lg shadow-amber-100">
-                                <span class="text-white/90 text-sm font-semibold">รอการอนุมัติ</span>
+                                <span class="text-white/90 text-xs font-semibold">รอการอนุมัติ</span>
                                 <h4 id="stat-pending" class="text-3xl font-extrabold mt-2">0</h4>
                             </div>
-                            <div class="bg-gradient-to-br from-teal-300 to-emerald-400 text-white p-5 rounded-3xl shadow-lg shadow-emerald-100">
-                                <span class="text-white/90 text-sm font-semibold">ยืนยันแล้ว / รอเข้าพบ</span>
+                            <div class="bg-gradient-to-br from-indigo-300 to-purple-400 text-white p-5 rounded-3xl shadow-lg shadow-indigo-100">
+                                <span class="text-white/90 text-xs font-semibold">ยืนยันแล้ว / รอเข้าพบ</span>
                                 <h4 id="stat-approved" class="text-3xl font-extrabold mt-2">0</h4>
                             </div>
-                            <div class="bg-gradient-to-br from-pink-400 to-purple-400 text-white p-5 rounded-3xl shadow-lg shadow-pink-100">
-                                <span class="text-white/90 text-sm font-semibold">ให้คำปรึกษาเสร็จสิ้น</span>
+                            <div class="bg-gradient-to-br from-teal-300 to-emerald-400 text-white p-5 rounded-3xl shadow-lg shadow-emerald-100">
+                                <span class="text-white/90 text-xs font-semibold">มาตามนัด (เสร็จสิ้น)</span>
                                 <h4 id="stat-completed" class="text-3xl font-extrabold mt-2">0</h4>
                             </div>
+                            <div class="bg-gradient-to-br from-rose-400 to-red-500 text-white p-5 rounded-3xl shadow-lg shadow-rose-100">
+                                <span class="text-white/90 text-xs font-semibold">ไม่มาตามนัด (ผิดนัด)</span>
+                                <h4 id="stat-noshow" class="text-3xl font-extrabold mt-2">0</h4>
+                            </div>
                         </div>
+
+                        <!-- ตารางสรุปสถิติรายบุคคล -->
+                        <div class="bg-rose-50/60 p-6 rounded-3xl border border-rose-200/80 space-y-3">
+                            <div class="flex flex-wrap justify-between items-center gap-2">
+                                <div>
+                                    <h4 class="font-extrabold text-rose-800 text-base">⚠️ สรุปสถิติการมาตามนัดและการผิดนัดรายบุคคล (สำหรับครูติดตาม/ว่ากล่าวตักเตือน)</h4>
+                                    <p class="text-xs text-slate-600">เรียงลำดับจากนักเรียนที่มีจำนวนครั้ง <strong>"ไม่มาตามนัด (ผิดนัด)"</strong> มากที่สุดไปน้อยที่สุด</p>
+                                </div>
+                            </div>
+                            <div id="student-attendance-stats-container" class="overflow-x-auto rounded-2xl border border-rose-100 bg-white"></div>
+                        </div>
+
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
                             <div class="bg-pink-50/50 p-6 rounded-3xl border border-pink-100">
                                 <h4 class="font-bold text-slate-800 mb-4">สถิติแยกตามหัวข้อปรึกษา</h4>
@@ -363,9 +379,18 @@
                         </div>
                     </div>
 
-                    <!-- Admin: Completed History -->
-                    <div id="adm-content-completed" class="hidden">
-                        <h3 class="text-lg font-extrabold text-slate-800 mb-4">ประวัติการให้คำปรึกษาและบันทึกผล</h3>
+                    <!-- Admin: Completed & No-Show History -->
+                    <div id="adm-content-completed" class="hidden space-y-4">
+                        <div class="flex flex-wrap justify-between items-center gap-3">
+                            <h3 class="text-lg font-extrabold text-slate-800">ประวัติการเข้าพบตามนัด & ประวัติการผิดนัด</h3>
+                            <div class="flex gap-2">
+                                <select id="history-filter-type" onchange="renderAdminCompleted()" class="rounded-full border border-purple-200 px-4 py-1.5 text-xs font-bold bg-white text-slate-700 outline-none">
+                                    <option value="all">แสดงทั้งหมด (มาตามนัด + ผิดนัด)</option>
+                                    <option value="completed">เฉพาะที่มาตามนัด (เสร็จสิ้น)</option>
+                                    <option value="no_show">เฉพาะที่ไม่มาตามนัด (ผิดนัด)</option>
+                                </select>
+                            </div>
+                        </div>
                         <div id="admin-completed-table-container" class="overflow-x-auto rounded-3xl border border-purple-100 shadow-sm bg-white"></div>
                     </div>
 
@@ -374,12 +399,16 @@
                         <div class="flex flex-wrap justify-between items-center gap-4 bg-gradient-to-r from-pink-50/70 to-sky-50/70 p-5 rounded-3xl border border-purple-100">
                             <div>
                                 <h3 class="text-lg font-extrabold text-slate-800">รายงานสรุปผลการให้คำปรึกษา (รูปแบบกระดาษ A4)</h3>
-                                <p class="text-xs text-slate-500 mt-0.5">เลือกช่วงวันที่หรือสถานะที่ต้องการ แล้วกดพิมพ์รายงานเสนอหัวหน้างาน</p>
+                                <p class="text-xs text-slate-500 mt-0.5">เลือกห้องเรียน ช่วงวันที่ หรือสถานะที่ต้องการ แล้วกดพิมพ์รายงานเสนอหัวหน้างาน</p>
                             </div>
                             <div class="flex flex-wrap items-center gap-2.5">
-                                <select id="rep-filter-status" onchange="renderA4Report()" class="rounded-full border border-purple-200 px-4 py-2 text-xs font-bold bg-white text-slate-700 outline-none">
+                                <select id="rep-filter-room" onchange="renderA4Report()" class="rounded-full border border-pink-200 px-4 py-2 text-xs font-bold bg-white text-slate-700 outline-none cursor-pointer">
+                                    <option value="all">ทุกห้องเรียน</option>
+                                </select>
+                                <select id="rep-filter-status" onchange="renderA4Report()" class="rounded-full border border-purple-200 px-4 py-2 text-xs font-bold bg-white text-slate-700 outline-none cursor-pointer">
                                     <option value="all">ทุกสถานะทั้งหมด</option>
-                                    <option value="completed">เฉพาะที่ให้คำปรึกษาเสร็จสิ้น</option>
+                                    <option value="completed">เฉพาะที่มาตามนัด (เสร็จสิ้น)</option>
+                                    <option value="no_show">เฉพาะที่ไม่มาตามนัด (ผิดนัด)</option>
                                     <option value="approved">เฉพาะที่อนุมัติแล้ว</option>
                                 </select>
                                 <input type="date" id="rep-date-start" onchange="renderA4Report()" class="rounded-full border border-purple-200 px-3.5 py-1.5 text-xs bg-white text-slate-700 outline-none" title="ตั้งแต่วันที่" />
@@ -400,22 +429,26 @@
                                     <p id="rep-subtitle-range" class="text-xs text-slate-500 mt-1">ข้อมูลทั้งหมด ณ วันที่พิมพ์รายงาน</p>
                                 </div>
 
-                                <div class="grid grid-cols-4 gap-3 mb-6 text-center">
-                                    <div class="border border-slate-300 rounded-xl p-3 bg-slate-50">
-                                        <span class="text-xs text-slate-500 block">จำนวนรายการในรายงาน</span>
-                                        <strong id="rep-sum-total" class="text-xl font-extrabold text-slate-900">0</strong> <span class="text-xs">ครั้ง</span>
+                                <div class="grid grid-cols-5 gap-2.5 mb-6 text-center">
+                                    <div class="border border-slate-300 rounded-xl p-2.5 bg-slate-50">
+                                        <span class="text-[11px] text-slate-500 block">รายการทั้งหมด</span>
+                                        <strong id="rep-sum-total" class="text-lg font-extrabold text-slate-900">0</strong> <span class="text-[11px]">ครั้ง</span>
                                     </div>
-                                    <div class="border border-slate-300 rounded-xl p-3 bg-slate-50">
-                                        <span class="text-xs text-slate-500 block">ให้คำปรึกษาเสร็จสิ้น</span>
-                                        <strong id="rep-sum-completed" class="text-xl font-extrabold text-emerald-700">0</strong> <span class="text-xs">ครั้ง</span>
+                                    <div class="border border-slate-300 rounded-xl p-2.5 bg-slate-50">
+                                        <span class="text-[11px] text-slate-500 block">มาตามนัด</span>
+                                        <strong id="rep-sum-completed" class="text-lg font-extrabold text-emerald-700">0</strong> <span class="text-[11px]">ครั้ง</span>
                                     </div>
-                                    <div class="border border-slate-300 rounded-xl p-3 bg-slate-50">
-                                        <span class="text-xs text-slate-500 block">ยืนยันนัด / รอเข้าพบ</span>
-                                        <strong id="rep-sum-approved" class="text-xl font-extrabold text-indigo-700">0</strong> <span class="text-xs">ครั้ง</span>
+                                    <div class="border border-slate-300 rounded-xl p-2.5 bg-slate-50">
+                                        <span class="text-[11px] text-slate-500 block">ผิดนัด</span>
+                                        <strong id="rep-sum-noshow" class="text-lg font-extrabold text-rose-700">0</strong> <span class="text-[11px]">ครั้ง</span>
                                     </div>
-                                    <div class="border border-slate-300 rounded-xl p-3 bg-slate-50">
-                                        <span class="text-xs text-slate-500 block">รอการพิจารณา</span>
-                                        <strong id="rep-sum-pending" class="text-xl font-extrabold text-amber-700">0</strong> <span class="text-xs">ครั้ง</span>
+                                    <div class="border border-slate-300 rounded-xl p-2.5 bg-slate-50">
+                                        <span class="text-[11px] text-slate-500 block">ยืนยันนัดแล้ว</span>
+                                        <strong id="rep-sum-approved" class="text-lg font-extrabold text-indigo-700">0</strong> <span class="text-[11px]">ครั้ง</span>
+                                    </div>
+                                    <div class="border border-slate-300 rounded-xl p-2.5 bg-slate-50">
+                                        <span class="text-[11px] text-slate-500 block">รอพิจารณา</span>
+                                        <strong id="rep-sum-pending" class="text-lg font-extrabold text-amber-700">0</strong> <span class="text-[11px]">ครั้ง</span>
                                     </div>
                                 </div>
 
@@ -436,14 +469,13 @@
                                 <div class="grid grid-cols-2 gap-8 pt-8 mt-auto text-xs text-slate-800 break-inside-avoid">
                                     <div class="text-center space-y-2">
                                         <p>ลงชื่อ ...................................................... ผู้รายงาน</p>
-                                        <p>( ...................................................... )</p>
-                                        <p>ครูผู้รับผิดชอบห้องปฏิบัติการ 1204</p>
+                                        <p>( ครูศรันย์กรณ์ อาจณรงค์กร )</p>
                                         <p>วันที่ ......... / ..................... / ............</p>
                                     </div>
                                     <div class="text-center space-y-2">
-                                        <p>ลงชื่อ ...................................................... หัวหน้างาน</p>
+                                        <p>ลงชื่อ ...................................................... ลงชื่อ</p>
                                         <p>( ...................................................... )</p>
-                                        <p>หัวหน้ากลุ่มสาระฯ / หัวหน้างานที่เกี่ยวข้อง</p>
+                                        <p>ครูที่ปรึกษา/ครูประจำวิชา/ผู้รับผิดชอบฯ</p>
                                         <p>วันที่ ......... / ..................... / ............</p>
                                     </div>
                                 </div>
@@ -580,7 +612,7 @@
                                     <div>
                                         <div class="flex items-center space-x-2">
                                             <h4 class="font-extrabold text-slate-800 text-base">ติดตั้ง & อัปเดตโครงสร้างฐานข้อมูลอัตโนมัติ</h4>
-                                            <span id="sys-schema-version" class="bg-emerald-100 text-emerald-700 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">Schema v2.1</span>
+                                            <span id="sys-schema-version" class="bg-emerald-100 text-emerald-700 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">Schema v2.2</span>
                                         </div>
                                         <p class="text-xs text-slate-600 mt-0.5">สั่งสร้างชีตที่ขาดหาย เพิ่มคอลัมน์ใหม่ และอัปเกรดฐานข้อมูล Google Sheets โดยข้อมูลเดิมไม่สูญหาย</p>
                                     </div>
@@ -751,25 +783,20 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white/70 backdrop-blur-md border-t border-pink-100 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-        ระบบจองคิวให้คำปรึกษา • Kroo Ja @ Ae 🌸✨
-    </footer>
-
-    <!-- Modal 2: เข้าสู่ระบบผู้ดูแล -->
+    <!-- Modal 1: ยืนยันรหัสผ่านเข้าสู่ระบบผู้ดูแล -->
     <div id="modal-auth" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex justify-center items-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-pink-100">
-            <div class="bg-gradient-to-r from-pink-400 to-sky-400 px-6 py-4 flex justify-between items-center text-white">
-                <h3 class="font-bold text-lg">เข้าสู่ระบบครูผู้ดูแล (ห้อง 1204)</h3>
+            <div class="bg-gradient-to-r from-pink-400 via-purple-400 to-sky-400 px-6 py-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-lg">เข้าสู่ระบบครูผู้ดูแล</h3>
                 <button onclick="closeAuthModal()" class="hover:bg-white/20 rounded-full p-1 px-2">✕</button>
             </div>
             <div class="p-6 space-y-4">
-                <p class="text-slate-600 text-sm">กรอกรหัสผ่านผู้ดูแลระบบเพื่อจัดการคิวจอง</p>
-                <input type="password" id="auth-password" onkeydown="if(event.key==='Enter') verifyAdminPassword()" placeholder="กรอกรหัสผ่าน..." class="w-full border border-purple-200 rounded-2xl px-4 py-3 outline-none focus:border-purple-400" autofocus />
-                <p id="auth-error" class="text-rose-500 text-sm font-semibold hidden"></p>
-                <div class="flex justify-end space-x-3 pt-4 border-t border-pink-100">
-                    <button onclick="closeAuthModal()" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-full font-bold">ยกเลิก</button>
-                    <button onclick="verifyAdminPassword()" class="px-6 py-2.5 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-bold shadow-md">เข้าสู่ระบบ</button>
+                <p class="text-sm text-slate-600">กรุณากรอกรหัสผ่านผู้ดูแลระบบเพื่อจัดการคิวจอง</p>
+                <input type="password" id="auth-password" onkeydown="if(event.key==='Enter') verifyAdminPassword()" placeholder="กรอกรหัสผ่าน..." class="w-full border border-purple-200 rounded-2xl px-4 py-3 outline-none focus:border-purple-400 shadow-sm" />
+                <p id="auth-error" class="hidden text-xs font-bold text-rose-500"></p>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button onclick="closeAuthModal()" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-full font-bold text-sm">ยกเลิก</button>
+                    <button onclick="verifyAdminPassword()" class="px-6 py-2.5 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-bold text-sm shadow-md">เข้าสู่ระบบ</button>
                 </div>
             </div>
         </div>
@@ -832,11 +859,11 @@
         </div>
     </div>
 
-    <!-- Modal 5: บันทึกหมายเหตุหลังให้คำปรึกษา -->
+    <!-- Modal 5: บันทึกหมายเหตุหลังให้คำปรึกษา / บันทึกสาเหตุการผิดนัด -->
     <div id="modal-note" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex justify-center items-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden border border-teal-100">
-            <div class="bg-gradient-to-r from-teal-400 to-emerald-400 px-6 py-4 text-white flex justify-between items-center">
-                <h3 class="font-bold text-lg">บันทึกผลการให้คำปรึกษา</h3>
+            <div id="note-modal-header" class="bg-gradient-to-r from-teal-400 to-emerald-400 px-6 py-4 text-white flex justify-between items-center">
+                <h3 id="note-modal-title" class="font-bold text-lg">บันทึกผลการให้คำปรึกษา</h3>
                 <button onclick="closeNoteModal()" class="hover:bg-white/20 rounded-full p-1 px-2">✕</button>
             </div>
             <div class="p-6 space-y-4">
@@ -845,13 +872,14 @@
                     <p id="note-student-meta" class="text-sm text-slate-500 mt-0.5"></p>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1.5">สรุปผลการให้คำปรึกษา / แนวทางแก้ไข:</label>
+                    <label id="note-textarea-label" class="block text-sm font-bold text-slate-700 mb-1.5">สรุปผลการให้คำปรึกษา / แนวทางแก้ไข:</label>
                     <textarea id="note-textarea" rows="4" class="w-full border border-teal-200 rounded-2xl p-3.5 outline-none focus:border-teal-400 shadow-sm" placeholder="พิมพ์บันทึกผลการให้คำปรึกษา..."></textarea>
                 </div>
                 <input type="hidden" id="note-booking-id" />
+                <input type="hidden" id="note-target-status" value="completed" />
                 <div class="flex justify-end space-x-3 pt-4 border-t border-teal-100">
                     <button onclick="closeNoteModal()" class="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-full font-bold">ยกเลิก</button>
-                    <button onclick="saveBookingNote()" class="px-6 py-2.5 bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-500 hover:to-emerald-500 text-white rounded-full font-bold shadow-md">บันทึกและปิดเคส</button>
+                    <button id="btn-save-note" onclick="saveBookingNote()" class="px-6 py-2.5 bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-500 hover:to-emerald-500 text-white rounded-full font-bold shadow-md">บันทึกและปิดเคส</button>
                 </div>
             </div>
         </div>
@@ -1079,6 +1107,18 @@
                 opt.value = r; opt.textContent = r;
                 filterRoomSel.appendChild(opt);
             });
+
+            const repRoomSel = document.getElementById('rep-filter-room');
+            if (repRoomSel) {
+                const prevRepRoom = repRoomSel.value || 'all';
+                repRoomSel.innerHTML = '<option value="all">ทุกห้องเรียน</option>';
+                globalData.rooms.forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r; opt.textContent = `ห้อง ${r}`;
+                    repRoomSel.appendChild(opt);
+                });
+                repRoomSel.value = Array.from(repRoomSel.options).some(o => o.value === prevRepRoom) ? prevRepRoom : 'all';
+            }
 
             const dateSel = document.getElementById('b-date');
             dateSel.innerHTML = '<option value="">-- เลือกวันที่เปิดให้จอง --</option>';
@@ -1309,8 +1349,9 @@
             list.forEach(b => {
                 let statusBadge = '';
                 if (b.status === 'approved') statusBadge = '<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-extrabold">✓ ยืนยันคิวแล้ว</span>';
-                else if (b.status === 'completed') statusBadge = '<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-extrabold">★ ปรึกษาเสร็จสิ้น</span>';
-                else if (b.status === 'rejected') statusBadge = '<span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-extrabold">✕ ไม่สามารถรับนัดได้</span>';
+                else if (b.status === 'completed') statusBadge = '<span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-extrabold">★ มาตามนัดแล้ว</span>';
+                else if (b.status === 'no_show') statusBadge = '<span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-extrabold">⚠️ ไม่มาตามนัด (ผิดนัด)</span>';
+                else if (b.status === 'rejected') statusBadge = '<span class="px-3 py-1 bg-slate-200 text-slate-700 rounded-full text-xs font-extrabold">✕ ไม่สามารถรับนัดได้</span>';
                 else statusBadge = '<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-extrabold">⏳ รอคุณครูยืนยัน</span>';
 
                 const card = document.createElement('div');
@@ -1498,11 +1539,15 @@
             const pending = bookings.filter(b => b.status === 'pending').length;
             const approved = bookings.filter(b => b.status === 'approved').length;
             const completed = bookings.filter(b => b.status === 'completed').length;
+            const noShow = bookings.filter(b => b.status === 'no_show').length;
 
             document.getElementById('stat-total').innerText = total;
             document.getElementById('stat-pending').innerText = pending;
             document.getElementById('stat-approved').innerText = approved;
             document.getElementById('stat-completed').innerText = completed;
+            if (document.getElementById('stat-noshow')) document.getElementById('stat-noshow').innerText = noShow;
+
+            renderStudentAttendanceStats();
 
             const topicCounts = {};
             bookings.forEach(b => { if (b.topic) topicCounts[b.topic] = (topicCounts[b.topic] || 0) + 1; });
@@ -1523,17 +1568,101 @@
             }
         }
 
+        function getStudentAttendanceSummaryMap() {
+            const map = {};
+            (globalData.bookings || []).forEach(b => {
+                const key = String(b.name || '').trim();
+                if (!key) return;
+                if (!map[key]) {
+                    map[key] = {
+                        name: key,
+                        room: b.room || '-',
+                        number: b.number || '-',
+                        phone: formatPhoneDisplay(b.phone),
+                        total: 0,
+                        completed: 0,
+                        noShow: 0,
+                        approved: 0,
+                        pending: 0,
+                        noShowNotes: []
+                    };
+                }
+                map[key].total += 1;
+                if (b.room) map[key].room = b.room;
+                if (b.number) map[key].number = b.number;
+                if (b.phone) map[key].phone = formatPhoneDisplay(b.phone);
+                if (b.status === 'completed') map[key].completed += 1;
+                else if (b.status === 'no_show') {
+                    map[key].noShow += 1;
+                    if (b.note) map[key].noShowNotes.push(`${formatThaiDate(b.date)}: ${b.note}`);
+                }
+                else if (b.status === 'approved') map[key].approved += 1;
+                else if (b.status === 'pending') map[key].pending += 1;
+            });
+            return map;
+        }
+
+        function renderStudentAttendanceStats() {
+            const container = document.getElementById('student-attendance-stats-container');
+            if (!container) return;
+            const summaryMap = getStudentAttendanceSummaryMap();
+            const list = Object.values(summaryMap).sort((a, b) => {
+                if (b.noShow !== a.noShow) return b.noShow - a.noShow;
+                return b.total - a.total;
+            });
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-400">ยังไม่มีข้อมูลสถิติการนัดหมายรายบุคคล</div>`;
+                return;
+            }
+
+            let html = `<table class="min-w-full divide-y divide-rose-100 text-xs">
+                <thead class="bg-rose-100/70 text-rose-900">
+                    <tr>
+                        <th class="px-4 py-3 text-left font-extrabold">ชื่อ - นามสกุล (ชั้น/ห้อง)</th>
+                        <th class="px-4 py-3 text-center font-extrabold">จองทั้งหมด</th>
+                        <th class="px-4 py-3 text-center font-extrabold">มาตามนัด</th>
+                        <th class="px-4 py-3 text-center font-extrabold">ไม่มาตามนัด (ผิดนัด)</th>
+                        <th class="px-4 py-3 text-left font-extrabold">สาเหตุ / หมายเหตุการผิดนัด</th>
+                        <th class="px-4 py-3 text-right font-extrabold">ติดต่อติดตาม</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-rose-50">`;
+
+            list.forEach(s => {
+                const telHref = getTelHref(s.phone);
+                const rowHighlight = s.noShow > 0 ? 'bg-rose-50/40' : 'bg-white';
+                const noShowBadge = s.noShow > 0
+                    ? `<span class="px-3 py-1 rounded-full bg-rose-500 text-white font-extrabold shadow-xs">⚠️ ${s.noShow} ครั้ง</span>`
+                    : `<span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 font-bold">0 ครั้ง</span>`;
+                html += `<tr class="${rowHighlight} hover:bg-rose-50/70 transition-colors">
+                    <td class="px-4 py-3 font-bold text-slate-800">${s.name} <span class="text-slate-500 font-normal">(${s.room} เลขที่ ${s.number})</span></td>
+                    <td class="px-4 py-3 text-center font-bold text-slate-700">${s.total} ครั้ง</td>
+                    <td class="px-4 py-3 text-center font-bold text-emerald-600">${s.completed} ครั้ง</td>
+                    <td class="px-4 py-3 text-center">${noShowBadge}</td>
+                    <td class="px-4 py-3 text-slate-600 max-w-xs">${s.noShowNotes.length > 0 ? s.noShowNotes.join(' | ') : '-'}</td>
+                    <td class="px-4 py-3 text-right whitespace-nowrap">
+                        ${s.phone ? `<a href="tel:${telHref}" class="inline-flex items-center gap-1 bg-sky-100 hover:bg-sky-500 text-sky-700 hover:text-white px-3 py-1 rounded-full font-mono font-bold transition-all">📞 ${s.phone}</a>` : '-'}
+                    </td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
         function renderAdminBookings() {
             const container = document.getElementById('admin-bookings-table-container');
-            const activeList = globalData.bookings.filter(b => b.status !== 'completed');
+            const activeList = globalData.bookings.filter(b => b.status !== 'completed' && b.status !== 'no_show');
             if (activeList.length === 0) {
                 container.innerHTML = `<div class="text-slate-400 text-center py-12 bg-pink-50/30"><p class="font-semibold">ไม่มีรายการจองคิวที่รอดำเนินการ 🌸</p></div>`;
                 return;
             }
 
+            const attendanceMap = getStudentAttendanceSummaryMap();
+
             let html = `<table class="min-w-full divide-y divide-pink-100 bg-white"><thead class="bg-gradient-to-r from-pink-100/80 via-purple-100/70 to-sky-100/80"><tr>
                 <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">วันที่ / เวลา</th>
-                <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">นักเรียน</th>
+                <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">นักเรียน & ประวัติการนัด</th>
                 <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">หัวข้อ / สถานที่</th>
                 <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">สถานะ</th>
                 <th class="px-6 py-4 text-right text-xs font-extrabold text-purple-800 uppercase tracking-wider">จัดการ</th>
@@ -1543,6 +1672,8 @@
                 const rowBg = idx % 2 === 0 ? 'bg-white' : 'bg-pink-50/20';
                 const displayPhone = formatPhoneDisplay(b.phone);
                 const telHref = getTelHref(displayPhone);
+                const stStats = attendanceMap[String(b.name || '').trim()] || { completed: 0, noShow: 0, total: 1 };
+
                 let badge = b.status === 'approved' ? '<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-extrabold">ยืนยันแล้ว</span>' :
                             b.status === 'rejected' ? '<span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-extrabold">ปฏิเสธ</span>' :
                             '<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-extrabold">รอการยืนยัน</span>';
@@ -1550,7 +1681,11 @@
                 html += `<tr class="${rowBg} hover:bg-gradient-to-r hover:from-pink-50/60 hover:to-sky-50/60 transition-colors">
                     <td class="px-6 py-4 text-sm"><div class="font-extrabold text-purple-600">${formatThaiDate(b.date)}</div><div class="text-sky-600 text-xs font-semibold">${b.timeSlot} น.</div></td>
                     <td class="px-6 py-4 text-sm">
-                        <div class="font-bold text-slate-800">${b.name}</div>
+                        <div class="font-bold text-slate-800 flex flex-wrap items-center gap-1.5">
+                            <span>${b.name}</span>
+                            ${stStats.noShow > 0 ? `<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[11px] font-extrabold border border-rose-200">⚠️ เคยผิดนัด ${stStats.noShow} ครั้ง</span>` : ''}
+                            ${stStats.completed > 0 ? `<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">✓ มาตามนัด ${stStats.completed} ครั้ง</span>` : ''}
+                        </div>
                         <div class="text-slate-500 text-xs flex flex-wrap items-center gap-1.5 mt-1">
                             <span>${b.room} | เลขที่ ${b.number || '-'}</span>
                             ${displayPhone ? `<a href="tel:${telHref}" title="แตะเพื่อโทรออกหา ${b.name}" class="inline-flex items-center gap-1 bg-sky-100 hover:bg-sky-500 text-sky-700 hover:text-white px-2.5 py-0.5 rounded-full font-mono font-bold transition-all shadow-xs">📞 ${displayPhone}</a>` : ''}
@@ -1564,7 +1699,8 @@
                     html += `<button onclick="openApproveModal('${b.id}')" class="bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-500 hover:to-emerald-500 text-white px-4 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all">อนุมัติคิว</button>`;
                     html += `<button onclick="updateStatus('${b.id}', 'rejected')" class="bg-rose-50 hover:bg-rose-400 text-rose-600 hover:text-white border border-rose-200 px-3.5 py-1.5 rounded-full font-bold text-xs transition-all">ปฏิเสธ</button>`;
                 } else if (b.status === 'approved') {
-                    html += `<button onclick="openNoteModal('${b.id}')" class="bg-gradient-to-r from-pink-400 to-purple-400 hover:from-pink-500 hover:to-purple-500 text-white px-4 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all">บันทึกผลปรึกษา</button>`;
+                    html += `<button onclick="openNoteModal('${b.id}', 'completed')" class="bg-gradient-to-r from-teal-400 to-emerald-500 hover:from-teal-500 hover:to-emerald-600 text-white px-3.5 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all">✓ มาตามนัด / บันทึกผล</button>`;
+                    html += `<button onclick="openNoteModal('${b.id}', 'no_show')" class="bg-rose-500 hover:bg-rose-600 text-white px-3.5 py-1.5 rounded-full font-bold text-xs shadow-sm transition-all">⚠️ ไม่มาตามนัด</button>`;
                 }
                 html += `</td></tr>`;
             });
@@ -1574,32 +1710,153 @@
 
         function renderAdminCompleted() {
             const container = document.getElementById('admin-completed-table-container');
-            const completedList = globalData.bookings.filter(b => b.status === 'completed');
-            if (completedList.length === 0) {
-                container.innerHTML = `<div class="text-slate-400 text-center py-12 bg-pink-50/30"><p class="font-semibold">ยังไม่มีประวัติการให้คำปรึกษา 🌸</p></div>`;
+            const filterType = document.getElementById('history-filter-type')?.value || 'all';
+            let historyList = globalData.bookings.filter(b => b.status === 'completed' || b.status === 'no_show');
+            if (filterType !== 'all') {
+                historyList = historyList.filter(b => b.status === filterType);
+            }
+
+            if (historyList.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 text-center py-12 bg-pink-50/30"><p class="font-semibold">ยังไม่มีประวัติการเข้าพบหรือการผิดนัดในเงื่อนไขนี้ 🌸</p></div>`;
                 return;
             }
+
+            const attendanceMap = getStudentAttendanceSummaryMap();
 
             let html = `<table class="min-w-full divide-y divide-pink-100 bg-white"><thead class="bg-gradient-to-r from-pink-100/80 via-purple-100/70 to-sky-100/80"><tr>
                 <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">วันที่ / เวลา</th>
                 <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">นักเรียน</th>
-                <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">หัวข้อ / สถานที่</th>
-                <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">บันทึกผลการปรึกษา</th>
+                <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">สถานะการเข้าพบ</th>
+                <th class="px-6 py-4 text-left text-xs font-extrabold text-purple-800 uppercase tracking-wider">บันทึกผล / สาเหตุผิดนัด</th>
                 <th class="px-6 py-4 text-right text-xs font-extrabold text-purple-800 uppercase tracking-wider">จัดการ</th>
             </tr></thead><tbody class="divide-y divide-pink-50">`;
 
-            completedList.forEach((b, idx) => {
-                const rowBg = idx % 2 === 0 ? 'bg-white' : 'bg-pink-50/20';
+            historyList.forEach((b, idx) => {
+                const isNoShow = b.status === 'no_show';
+                const rowBg = isNoShow ? 'bg-rose-50/40' : (idx % 2 === 0 ? 'bg-white' : 'bg-pink-50/20');
+                const displayPhone = formatPhoneDisplay(b.phone);
+                const telHref = getTelHref(displayPhone);
+                const stStats = attendanceMap[String(b.name || '').trim()] || { completed: 0, noShow: 0 };
+
+                const statusBadge = isNoShow
+                    ? `<span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-extrabold border border-rose-200">⚠️ ไม่มาตามนัด (สะสม ${stStats.noShow} ครั้ง)</span>`
+                    : `<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-extrabold border border-emerald-200">✓ มาตามนัดแล้ว</span>`;
+
+                const noteBoxClass = isNoShow
+                    ? 'bg-rose-50 border border-rose-200 text-rose-800 p-3 rounded-2xl text-xs'
+                    : 'bg-teal-50/70 border border-teal-100 text-slate-700 p-3 rounded-2xl text-xs';
+
                 html += `<tr class="${rowBg} hover:bg-gradient-to-r hover:from-pink-50/60 hover:to-sky-50/60 transition-colors">
-                    <td class="px-6 py-4 text-sm"><div class="font-extrabold text-teal-600">${formatThaiDate(b.date)}</div><div class="text-sky-600 text-xs font-semibold">${b.timeSlot} น.</div></td>
-                    <td class="px-6 py-4 text-sm"><div class="font-bold text-slate-800">${b.name}</div><div class="text-slate-500 text-xs">${b.room} | เลขที่ ${b.number || '-'}</div></td>
-                    <td class="px-6 py-4 text-sm"><div class="font-medium text-slate-700">${b.topic}</div>${b.location ? `<div class="text-xs text-pink-600 font-bold mt-0.5">📍 ${b.location}</div>` : ''}</td>
-                    <td class="px-6 py-4 text-sm text-slate-700"><div class="bg-teal-50/70 border border-teal-100 p-3 rounded-2xl text-xs">${b.note || '<span class="text-slate-400 italic">ยังไม่มีหมายเหตุ</span>'}</div></td>
-                    <td class="px-6 py-4 text-right text-sm"><button onclick="openNoteModal('${b.id}')" class="bg-purple-50 hover:bg-purple-500 text-purple-700 hover:text-white px-4 py-1.5 rounded-full font-bold text-xs transition-all">แก้ไขบันทึก</button></td>
+                    <td class="px-6 py-4 text-sm"><div class="font-extrabold ${isNoShow ? 'text-rose-600' : 'text-teal-600'}">${formatThaiDate(b.date)}</div><div class="text-sky-600 text-xs font-semibold">${b.timeSlot} น.</div></td>
+                    <td class="px-6 py-4 text-sm">
+                        <div class="font-bold text-slate-800">${b.name}</div>
+                        <div class="text-slate-500 text-xs flex flex-wrap items-center gap-1.5 mt-0.5">
+                            <span>${b.room} | เลขที่ ${b.number || '-'}</span>
+                            ${displayPhone ? `<a href="tel:${telHref}" class="inline-flex items-center gap-1 bg-sky-100 hover:bg-sky-500 text-sky-700 hover:text-white px-2 py-0.5 rounded-full font-mono font-bold transition-all">📞 ${displayPhone}</a>` : ''}
+                        </div>
+                        <div class="text-xs text-slate-600 mt-1">หัวข้อ: ${b.topic}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm">${statusBadge}</td>
+                    <td class="px-6 py-4 text-sm"><div class="${noteBoxClass}">${b.note || '<span class="text-slate-400 italic">ยังไม่มีหมายเหตุ</span>'}</div></td>
+                    <td class="px-6 py-4 text-right text-sm whitespace-nowrap space-x-1">
+                        <button onclick="openNoteModal('${b.id}', '${b.status}')" class="bg-purple-50 hover:bg-purple-500 text-purple-700 hover:text-white px-3.5 py-1.5 rounded-full font-bold text-xs transition-all">แก้ไขบันทึก</button>
+                    </td>
                 </tr>`;
             });
             html += `</tbody></table>`;
             container.innerHTML = html;
+        }
+
+        async function handleAddSingleStudent(e) {
+            e.preventDefault();
+            const newStudent = {
+                grade: document.getElementById('std-grade').value.trim(),
+                studentId: document.getElementById('std-code').value.trim(),
+                prefix: document.getElementById('std-prefix').value,
+                firstName: document.getElementById('std-fname').value.trim(),
+                lastName: document.getElementById('std-lname').value.trim()
+            };
+            await callBackend('saveStudents', { students: [newStudent], mode: 'merge' });
+            e.target.reset();
+            await loadInitialData();
+            showSuccessAlert(`เพิ่มข้อมูลนักเรียน ${newStudent.prefix}${newStudent.firstName} ${newStudent.lastName} เรียบร้อยแล้ว`);
+        }
+
+        function renderAdminStudents() {
+            const container = document.getElementById('admin-students-table-container');
+            if (!container) return;
+            const query = (document.getElementById('std-search-input')?.value || '').trim().toLowerCase();
+            const allStudents = globalData.students || [];
+            const countEl = document.getElementById('std-total-count');
+            if (countEl) countEl.innerText = allStudents.length;
+
+            const filtered = allStudents.filter(s =>
+                !query ||
+                String(s.studentId || '').toLowerCase().includes(query) ||
+                String(s.firstName || '').toLowerCase().includes(query) ||
+                String(s.lastName || '').toLowerCase().includes(query) ||
+                String(s.grade || '').toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 text-center py-10 bg-pink-50/20 text-sm">ไม่พบข้อมูลนักเรียนในฐานข้อมูล</div>`;
+                return;
+            }
+
+            let html = `<table class="min-w-full divide-y divide-pink-100 bg-white text-xs"><thead class="bg-gradient-to-r from-pink-100/80 via-purple-100/70 to-sky-100/80"><tr>
+                <th class="px-4 py-3 text-left font-extrabold text-purple-800">ระดับชั้น</th>
+                <th class="px-4 py-3 text-left font-extrabold text-purple-800">รหัสประจำตัว</th>
+                <th class="px-4 py-3 text-left font-extrabold text-purple-800">คำนำหน้า</th>
+                <th class="px-4 py-3 text-left font-extrabold text-purple-800">ชื่อ</th>
+                <th class="px-4 py-3 text-left font-extrabold text-purple-800">สกุล</th>
+                <th class="px-4 py-3 text-right font-extrabold text-purple-800">จัดการ</th>
+            </tr></thead><tbody class="divide-y divide-pink-50">`;
+
+            filtered.forEach((s, idx) => {
+                const rowBg = idx % 2 === 0 ? 'bg-white' : 'bg-pink-50/20';
+                html += `<tr class="${rowBg} hover:bg-sky-50/50">
+                    <td class="px-4 py-2.5 font-bold text-purple-700">${s.grade || '-'}</td>
+                    <td class="px-4 py-2.5 font-mono font-bold text-slate-700">${s.studentId || '-'}</td>
+                    <td class="px-4 py-2.5 text-slate-700">${s.prefix || ''}</td>
+                    <td class="px-4 py-2.5 font-semibold text-slate-800">${s.firstName || ''}</td>
+                    <td class="px-4 py-2.5 font-semibold text-slate-800">${s.lastName || ''}</td>
+                    <td class="px-4 py-2.5 text-right"><button type="button" onclick="deleteStudentAction('${s.studentId}')" class="text-rose-500 hover:bg-rose-400 hover:text-white border border-rose-200 px-3 py-1 rounded-full font-bold transition-all">ลบ</button></td>
+                </tr>`;
+            });
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function deleteStudentAction(studentId) {
+            showDialog("ยืนยันการลบข้อมูลนักเรียน", `ต้องการลบรหัสนักเรียน ${studentId} ออกจากฐานข้อมูลใช่หรือไม่?`, async () => {
+                await callBackend('deleteStudent', { studentId });
+                await loadInitialData();
+                showSuccessAlert('ลบข้อมูลนักเรียนเรียบร้อยแล้ว');
+            });
+        }
+
+        function clearAllStudents() {
+            showDialog("ยืนยันล้างรายชื่อนักเรียนทั้งหมด", "รายชื่อนักเรียนทั้งหมดในชีต Students จะถูกล้างออก คุณแน่ใจหรือไม่?", async () => {
+                await callBackend('saveStudents', { students: [], mode: 'replace' });
+                await loadInitialData();
+                showSuccessAlert('ล้างรายชื่อนักเรียนทั้งหมดเรียบร้อยแล้ว');
+            });
+        }
+
+        function downloadStudentExcelTemplate() {
+            if (typeof XLSX === 'undefined') {
+                showDialog('ไม่พบไลบรารี Excel', 'กรุณาเชื่อมต่ออินเทอร์เน็ตเพื่อสร้างไฟล์ Excel ตัวอย่าง');
+                return;
+            }
+            const sampleData = [
+                { 'ระดับชั้น': 'ม.4/1', 'รหัสประจำตัว': '66001', 'คำนำหน้า': 'นาย', 'ชื่อ': 'ธนกฤต', 'สกุล': 'รักเรียน' },
+                { 'ระดับชั้น': 'ม.4/1', 'รหัสประจำตัว': '66002', 'คำนำหน้า': 'นางสาว', 'ชื่อ': 'ปภาวรินทร์', 'สกุล': 'ใจดี' },
+                { 'ระดับชั้น': 'ม.2/3', 'รหัสประจำตัว': '68105', 'คำนำหน้า': 'เด็กชาย', 'ชื่อ': 'กิตติภพ', 'สกุล': 'ขยันยิ่ง' }
+            ];
+            const ws = XLSX.utils.json_to_sheet(sampleData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Students');
+            XLSX.writeFile(wb, 'ตัวอย่างข้อมูลนักเรียน_ระบบจองคิว.xlsx');
         }
 
         function openApproveModal(id) {
@@ -1620,41 +1877,56 @@
             const id = document.getElementById('approve-booking-id').value;
             const location = document.getElementById('approve-location-select').value || 'ห้องพักครู 1204';
             const btn = document.getElementById('btn-confirm-approve');
-            btn.disabled = true;
-            btn.innerText = 'กำลังอนุมัติ...';
+            if (btn) { btn.disabled = true; btn.innerText = 'กำลังอนุมัติ...'; }
             try {
                 await callBackend('updateBookingStatus', { id, status: 'approved', location });
-                btn.disabled = false;
-                btn.innerText = '✓ ยืนยันอนุมัติคิว';
+                if (btn) { btn.disabled = false; btn.innerText = '✓ ยืนยันอนุมัติคิว'; }
                 closeApproveModal();
                 await loadInitialData();
-                const calTarget = getCalendarEmail() || 'ปฏิทินหลักของครู';
-                showSuccessAlert(`อนุมัติคิว (สถานที่: ${location}) และลงนัดหมายในปฏิทิน (${calTarget}) เรียบร้อยแล้ว`);
+                showSuccessAlert(`อนุมัติคิวและกำหนดสถานที่นัดพบที่ "${location}" เรียบร้อยแล้ว`);
             } catch (err) {
-                btn.disabled = false;
-                btn.innerText = '✓ ยืนยันอนุมัติคิว';
+                if (btn) { btn.disabled = false; btn.innerText = '✓ ยืนยันอนุมัติคิว'; }
                 showDialog('เกิดข้อผิดพลาด', err.message);
             }
         }
 
-        async function updateStatus(id, status, location) {
-            await callBackend('updateBookingStatus', { id, status, location });
+        async function updateStatus(id, status) {
+            await callBackend('updateBookingStatus', { id, status });
             await loadInitialData();
-            if (status === 'approved') {
-                const calTarget = getCalendarEmail() || 'ปฏิทินหลักของครู';
-                showSuccessAlert(`อนุมัติคิวและลงนัดหมายในปฏิทิน (${calTarget}) เรียบร้อยแล้ว`);
-            } else {
-                showSuccessAlert('อัปเดตสถานะเรียบร้อยแล้ว');
-            }
+            showSuccessAlert('อัปเดตสถานะเรียบร้อยแล้ว');
         }
 
-        function openNoteModal(id) {
+        function openNoteModal(id, targetStatus = 'completed') {
             const b = globalData.bookings.find(item => item.id === id);
             if (!b) return;
             document.getElementById('note-booking-id').value = b.id;
+            document.getElementById('note-target-status').value = targetStatus;
             document.getElementById('note-student-label').innerText = `นักเรียน: ${b.name}`;
             document.getElementById('note-student-meta').innerText = `ห้อง: ${b.room} | เลขที่: ${b.number || '-'} | หัวข้อ: ${b.topic}`;
             document.getElementById('note-textarea').value = b.note || '';
+
+            const header = document.getElementById('note-modal-header');
+            const title = document.getElementById('note-modal-title');
+            const label = document.getElementById('note-textarea-label');
+            const textarea = document.getElementById('note-textarea');
+            const saveBtn = document.getElementById('btn-save-note');
+
+            if (targetStatus === 'no_show') {
+                header.className = 'bg-gradient-to-r from-rose-500 to-red-500 px-6 py-4 text-white flex justify-between items-center';
+                title.innerText = '⚠️ บันทึกการไม่มาตามนัด (ผิดนัด)';
+                label.innerText = 'ระบุสาเหตุการผิดนัด / ผลการติดตามว่ากล่าวตักเตือน:';
+                textarea.placeholder = 'เช่น นักเรียนลืมเวลานัด / ติดเรียนวิชาอื่น / ได้เรียกมาพูดคุยตักเตือนแล้ว...';
+                saveBtn.className = 'px-6 py-2.5 bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white rounded-full font-bold shadow-md';
+                saveBtn.innerText = 'บันทึกประวัติผิดนัด';
+            } else {
+                header.className = 'bg-gradient-to-r from-teal-400 to-emerald-400 px-6 py-4 text-white flex justify-between items-center';
+                title.innerText = '✓ บันทึกผลการให้คำปรึกษา (มาตามนัด)';
+                label.innerText = 'สรุปผลการให้คำปรึกษา / แนวทางแก้ไข:';
+                textarea.placeholder = 'พิมพ์บันทึกผลการให้คำปรึกษา...';
+                saveBtn.className = 'px-6 py-2.5 bg-gradient-to-r from-teal-400 to-emerald-400 hover:from-teal-500 hover:to-emerald-500 text-white rounded-full font-bold shadow-md';
+                saveBtn.innerText = 'บันทึกและปิดเคส';
+            }
+
             document.getElementById('modal-note').classList.remove('hidden');
         }
 
@@ -1662,121 +1934,15 @@
 
         async function saveBookingNote() {
             const id = document.getElementById('note-booking-id').value;
+            const targetStatus = document.getElementById('note-target-status').value || 'completed';
             const note = document.getElementById('note-textarea').value;
-            await callBackend('updateBookingStatus', { id, status: 'completed', note });
+            await callBackend('updateBookingStatus', { id, status: targetStatus, note });
             closeNoteModal();
             await loadInitialData();
-            showSuccessAlert('บันทึกผลการให้คำปรึกษาเรียบร้อยแล้ว');
-        }
-
-        // ==========================================
-        // 7.1 จัดการข้อมูลนักเรียน & นำเข้า Excel
-        // ==========================================
-        function renderAdminStudents() {
-            const container = document.getElementById('admin-students-table-container');
-            const countEl = document.getElementById('std-total-count');
-            const query = (document.getElementById('std-search-input')?.value || '').trim().toLowerCase();
-
-            let list = globalData.students || [];
-            if (countEl) countEl.innerText = list.length;
-
-            if (query) {
-                list = list.filter(s =>
-                    (s.studentId && String(s.studentId).toLowerCase().includes(query)) ||
-                    (s.firstName && s.firstName.toLowerCase().includes(query)) ||
-                    (s.lastName && s.lastName.toLowerCase().includes(query)) ||
-                    (s.grade && s.grade.toLowerCase().includes(query))
-                );
-            }
-
-            if (!container) return;
-            if (list.length === 0) {
-                container.innerHTML = `<div class="text-slate-400 text-center py-12 bg-pink-50/30"><p class="font-semibold">ยังไม่มีข้อมูลนักเรียนตามเงื่อนไขที่ค้นหา 🌸</p></div>`;
-                return;
-            }
-
-            let html = `<table class="min-w-full divide-y divide-pink-100 bg-white"><thead class="bg-gradient-to-r from-pink-100/80 via-purple-100/70 to-sky-100/80"><tr>
-                <th class="px-5 py-3.5 text-left text-xs font-extrabold text-purple-800 uppercase">ระดับชั้น</th>
-                <th class="px-5 py-3.5 text-left text-xs font-extrabold text-purple-800 uppercase">รหัสประจำตัว</th>
-                <th class="px-5 py-3.5 text-left text-xs font-extrabold text-purple-800 uppercase">คำนำหน้า</th>
-                <th class="px-5 py-3.5 text-left text-xs font-extrabold text-purple-800 uppercase">ชื่อ</th>
-                <th class="px-5 py-3.5 text-left text-xs font-extrabold text-purple-800 uppercase">สกุล</th>
-                <th class="px-5 py-3.5 text-right text-xs font-extrabold text-purple-800 uppercase">จัดการ</th>
-            </tr></thead><tbody class="divide-y divide-pink-50">`;
-
-            list.forEach((s, idx) => {
-                const rowBg = idx % 2 === 0 ? 'bg-white' : 'bg-pink-50/20';
-                html += `<tr class="${rowBg} hover:bg-gradient-to-r hover:from-pink-50/60 hover:to-sky-50/60 transition-colors">
-                    <td class="px-5 py-3 text-sm"><span class="bg-purple-100 text-purple-700 px-3 py-0.5 rounded-full text-xs font-bold">${s.grade || '-'}</span></td>
-                    <td class="px-5 py-3 text-sm font-mono font-bold text-sky-700">${s.studentId}</td>
-                    <td class="px-5 py-3 text-sm text-slate-600">${s.prefix}</td>
-                    <td class="px-5 py-3 text-sm font-bold text-slate-800">${s.firstName}</td>
-                    <td class="px-5 py-3 text-sm font-bold text-slate-800">${s.lastName}</td>
-                    <td class="px-5 py-3 text-right text-sm">
-                        <button onclick="deleteStudentAction('${s.studentId}')" class="text-rose-500 hover:text-white hover:bg-rose-400 px-3.5 py-1 rounded-full text-xs font-bold border border-rose-200 transition-all">ลบ</button>
-                    </td>
-                </tr>`;
-            });
-            html += `</tbody></table>`;
-            container.innerHTML = html;
-        }
-
-        async function handleAddSingleStudent(e) {
-            e.preventDefault();
-            const newStudent = {
-                grade: document.getElementById('std-grade').value.trim(),
-                studentId: document.getElementById('std-code').value.trim(),
-                prefix: document.getElementById('std-prefix').value,
-                firstName: document.getElementById('std-fname').value.trim(),
-                lastName: document.getElementById('std-lname').value.trim()
-            };
-            await callBackend('saveStudents', { students: [newStudent], mode: 'merge' });
-            e.target.reset();
-            await loadInitialData();
-            showSuccessAlert(`บันทึกข้อมูลนักเรียน (${newStudent.prefix}${newStudent.firstName}) เรียบร้อยแล้ว`);
-        }
-
-        function deleteStudentAction(studentId) {
-            showDialog("ยืนยันการลบข้อมูลนักเรียน", `ต้องการลบรหัสประจำตัว "${studentId}" ออกจากระบบใช่หรือไม่?`, async () => {
-                await callBackend('deleteStudent', { studentId });
-                await loadInitialData();
-                showSuccessAlert('ลบข้อมูลนักเรียนสำเร็จ');
-            });
-        }
-
-        function clearAllStudents() {
-            showDialog("⚠️ ล้างฐานข้อมูลนักเรียน", "รายชื่อนักเรียนทั้งหมดในระบบจะถูกลบออก คุณแน่ใจหรือไม่?", async () => {
-                await callBackend('saveStudents', { students: [], mode: 'replace' });
-                await loadInitialData();
-                showSuccessAlert('ล้างข้อมูลนักเรียนทั้งหมดเรียบร้อยแล้ว');
-            });
-        }
-
-        function downloadStudentExcelTemplate() {
-            const sampleRows = [
-                { 'ระดับชั้น': 'ม.2/1', 'รหัสประจำตัว': '68001', 'คำนำหน้า': 'เด็กชาย', 'ชื่อ': 'กฤตภาส', 'สกุล': 'ใจดี' },
-                { 'ระดับชั้น': 'ม.2/1', 'รหัสประจำตัว': '68002', 'คำนำหน้า': 'เด็กหญิง', 'ชื่อ': 'ณัฐธิดา', 'สกุล': 'รักเรียน' },
-                { 'ระดับชั้น': 'ม.6/1', 'รหัสประจำตัว': '65015', 'คำนำหน้า': 'นาย', 'ชื่อ': 'ธนกฤต', 'สกุล': 'เก่งกล้า' },
-                { 'ระดับชั้น': 'ม.6/2', 'รหัสประจำตัว': '65028', 'คำนำหน้า': 'นางสาว', 'ชื่อ': 'พิมพ์ชนก', 'สกุล': 'สุขสันต์' }
-            ];
-
-            if (typeof XLSX !== 'undefined') {
-                const ws = XLSX.utils.json_to_sheet(sampleRows);
-                ws['!cols'] = [{ wch: 12 }, { wch: 16 }, { wch: 14 }, { wch: 20 }, { wch: 22 }];
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'รายชื่อนักเรียน');
-                XLSX.writeFile(wb, 'ตัวอย่างไฟล์นำเข้านักเรียน_1204.xlsx');
-                showSuccessAlert('ดาวน์โหลดไฟล์ตัวอย่าง Excel (.xlsx) เรียบร้อยแล้ว');
+            if (targetStatus === 'no_show') {
+                showSuccessAlert('บันทึกประวัติ "ไม่มาตามนัด (ผิดนัด)" เรียบร้อยแล้ว');
             } else {
-                let csv = "\uFEFFระดับชั้น,รหัสประจำตัว,คำนำหน้า,ชื่อ,สกุล\n";
-                sampleRows.forEach(r => {
-                    csv += `"${r['ระดับชั้น']}","${r['รหัสประจำตัว']}","${r['คำนำหน้า']}","${r['ชื่อ']}","${r['สกุล']}"\n`;
-                });
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url; a.download = 'ตัวอย่างไฟล์นำเข้านักเรียน_1204.csv';
-                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                showSuccessAlert('บันทึกผลการให้คำปรึกษาเรียบร้อยแล้ว');
             }
         }
 
@@ -1964,10 +2130,11 @@
         }
 
         function exportBookingsCSV() {
-            let csvContent = "\uFEFFรหัสคิว,ชื่อ-นามสกุล,ห้อง,เลขที่,อีเมล,เบอร์โทร,หัวข้อปรึกษา,วันที่,เวลา,สถานที่นัดพบ,สถานะ,บันทึกผล\n";
+            const statusThai = { completed: 'มาตามนัด', no_show: 'ไม่มาตามนัด (ผิดนัด)', approved: 'ยืนยันแล้ว', pending: 'รออนุมัติ', rejected: 'ปฏิเสธ' };
+            let csvContent = "\uFEFFรหัสคิว,ชื่อ-นามสกุล,ห้อง,เลขที่,อีเมล,เบอร์โทร,หัวข้อปรึกษา,วันที่,เวลา,สถานที่นัดพบ,สถานะ,บันทึกผล/สาเหตุผิดนัด\n";
             globalData.bookings.forEach(b => {
                 const p = formatPhoneDisplay(b.phone);
-                csvContent += `"${b.id}","${b.name}","${b.room}","${b.number || ''}","${b.email || ''}","${p}","${b.topic}","${b.date}","${b.timeSlot}","${b.location || ''}","${b.status}","${(b.note || '').replace(/"/g, '""')}"\n`;
+                csvContent += `"${b.id}","${b.name}","${b.room}","${b.number || ''}","${b.email || ''}","${p}","${b.topic}","${b.date}","${b.timeSlot}","${b.location || ''}","${statusThai[b.status] || b.status}","${(b.note || '').replace(/"/g, '""')}"\n`;
             });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -1981,11 +2148,15 @@
         // 8. ระบบรายงานรูปแบบ A4 สำหรับพิมพ์ส่งหัวหน้างาน
         // ==========================================
         function renderA4Report() {
+            const roomFilter = document.getElementById('rep-filter-room')?.value || 'all';
             const statusFilter = document.getElementById('rep-filter-status')?.value || 'all';
             const startDate = document.getElementById('rep-date-start')?.value || '';
             const endDate = document.getElementById('rep-date-end')?.value || '';
 
             let list = [...globalData.bookings];
+            if (roomFilter !== 'all') {
+                list = list.filter(b => b.room === roomFilter);
+            }
             if (statusFilter !== 'all') {
                 list = list.filter(b => b.status === statusFilter);
             }
@@ -1998,19 +2169,21 @@
 
             const rangeEl = document.getElementById('rep-subtitle-range');
             if (rangeEl) {
+                const roomLabel = roomFilter !== 'all' ? `ชั้น/ห้อง: ${roomFilter} • ` : 'ทุกห้องเรียน • ';
                 if (startDate && endDate) {
-                    rangeEl.innerText = `ประจำวันที่ ${formatThaiDate(startDate)} ถึง ${formatThaiDate(endDate)}`;
+                    rangeEl.innerText = `${roomLabel}ประจำวันที่ ${formatThaiDate(startDate)} ถึง ${formatThaiDate(endDate)}`;
                 } else if (startDate) {
-                    rangeEl.innerText = `ตั้งแต่วันที่ ${formatThaiDate(startDate)} เป็นต้นไป`;
+                    rangeEl.innerText = `${roomLabel}ตั้งแต่วันที่ ${formatThaiDate(startDate)} เป็นต้นไป`;
                 } else if (endDate) {
-                    rangeEl.innerText = `ข้อมูลถึงวันที่ ${formatThaiDate(endDate)}`;
+                    rangeEl.innerText = `${roomLabel}ข้อมูลถึงวันที่ ${formatThaiDate(endDate)}`;
                 } else {
-                    rangeEl.innerText = `ข้อมูลสรุปทั้งหมด (พิมพ์เมื่อวันที่ ${formatThaiDate(getFutureDateStr(0))})`;
+                    rangeEl.innerText = `${roomLabel}ข้อมูลสรุปทั้งหมด (พิมพ์เมื่อวันที่ ${formatThaiDate(getFutureDateStr(0))})`;
                 }
             }
 
             document.getElementById('rep-sum-total').innerText = list.length;
             document.getElementById('rep-sum-completed').innerText = list.filter(b => b.status === 'completed').length;
+            if (document.getElementById('rep-sum-noshow')) document.getElementById('rep-sum-noshow').innerText = list.filter(b => b.status === 'no_show').length;
             document.getElementById('rep-sum-approved').innerText = list.filter(b => b.status === 'approved').length;
             document.getElementById('rep-sum-pending').innerText = list.filter(b => b.status === 'pending').length;
 
@@ -2023,7 +2196,8 @@
             }
 
             const statusLabels = {
-                completed: 'เสร็จสิ้น',
+                completed: 'มาตามนัด',
+                no_show: 'ผิดนัด',
                 approved: 'อนุมัติแล้ว',
                 pending: 'รออนุมัติ',
                 rejected: 'ปฏิเสธ'
