@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="Fix1204">
     <link rel="apple-touch-icon" href="./icon-192x192.png">
     <!-- สิ้นสุดส่วนตั้งค่า PWA / ไอคอนบนมือถือ -->
-    <title>ระบบจองคิวพบครู 1204</title>
+    <title>ระบบจองคิวให้คำปรึกษา</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -90,10 +90,10 @@
                 </div>
                 <div>
                     <div class="flex items-center space-x-2">
-                        <h1 class="text-base sm:text-xl font-extrabold tracking-tight drop-shadow-sm">ระบบจองคิวพบครู 1204</h1>
-                        <span class="hidden sm:inline-block bg-white/25 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-white/40 backdrop-blur-sm">Multi-Platform</span>
+                        <h1 class="text-base sm:text-xl font-extrabold tracking-tight drop-shadow-sm">ระบบจองคิวให้คำปรึกษา</h1>
+                        <span class="hidden sm:inline-block bg-white/25 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-white/40 backdrop-blur-sm">Kroo Ja @ Ae</span>
                     </div>
-                    <p class="text-[11px] sm:text-xs text-white/90 font-medium">ห้องคอมพิวเตอร์ 1204 • รองรับมือถือ แท็บเล็ต และคอมพิวเตอร์</p>
+                    <p class="text-[11px] sm:text-xs text-white/90 font-medium">ระบบพัฒนาเพื่อการแก้ปัญหาติดตามช่วยเหลือนักเรียน</p>
                 </div>
             </div>
 
@@ -269,10 +269,10 @@
                     <p class="text-sm text-slate-600 mt-1">ค้นหาด้วยชื่อ-นามสกุล หรือเบอร์โทรศัพท์ เพื่อดูผลการอนุมัติและพิมพ์ใบนัดเข้าพบครู</p>
                 </div>
                 <div class="p-6 sm:p-8 space-y-6">
-                    <div class="max-w-xl flex gap-2">
-                        <input type="text" id="track-search-input" onkeyup="renderTrackResults()" placeholder="พิมพ์ชื่อ-นามสกุล หรือ เบอร์โทรศัพท์ของคุณ..." class="flex-1 rounded-full border border-purple-200 px-5 py-3 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 shadow-sm bg-white" />
-                        <button onclick="renderTrackResults()" class="bg-gradient-to-r from-purple-400 to-sky-400 hover:from-purple-500 hover:to-sky-500 text-white px-7 py-3 rounded-full font-bold shadow-md shadow-purple-200 transition-all">ค้นหา</button>
-                    </div>
+                    <form onsubmit="event.preventDefault(); renderTrackResults(true);" class="max-w-xl flex gap-2">
+                        <input type="text" id="track-search-input" placeholder="พิมพ์ชื่อ-นามสกุล หรือ เบอร์โทรศัพท์ของคุณ..." class="flex-1 rounded-full border border-purple-200 px-5 py-3 outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 shadow-sm bg-white" />
+                        <button type="submit" class="bg-gradient-to-r from-purple-400 to-sky-400 hover:from-purple-500 hover:to-sky-500 text-white px-7 py-3 rounded-full font-bold shadow-md shadow-purple-200 transition-all">ค้นหา</button>
+                    </form>
                     <div id="track-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
             </div>
@@ -753,7 +753,7 @@
 
     <!-- Footer -->
     <footer class="bg-white/70 backdrop-blur-md border-t border-pink-100 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-        ระบบจองคิวพบครู 1204 • Pastel UI Edition 🌸✨
+        ระบบจองคิวให้คำปรึกษา • Kroo Ja @ Ae 🌸✨
     </footer>
 
     <!-- Modal 2: เข้าสู่ระบบผู้ดูแล -->
@@ -800,9 +800,10 @@
                     <div class="grid grid-cols-2 gap-3 text-sm pt-1">
                         <div><span class="text-slate-500 text-xs block">ชื่อ - นามสกุลนักเรียน:</span><strong id="slip-name" class="text-slate-800"></strong></div>
                         <div><span class="text-slate-500 text-xs block">ชั้น / ห้อง / เลขที่:</span><strong id="slip-room" class="text-slate-800"></strong></div>
+                        <div><span class="text-slate-500 text-xs block">เบอร์โทรศัพท์ติดต่อ:</span><strong id="slip-phone" class="text-slate-800 font-mono"></strong></div>
+                        <div><span class="text-slate-500 text-xs block">สถานที่นัดพบ:</span><strong id="slip-location" class="text-pink-600"></strong></div>
                         <div><span class="text-slate-500 text-xs block">วันที่นัดหมาย:</span><strong id="slip-date" class="text-purple-600 text-base"></strong></div>
                         <div><span class="text-slate-500 text-xs block">ช่วงเวลา:</span><strong id="slip-time" class="text-sky-600 text-base"></strong></div>
-                        <div class="col-span-2"><span class="text-slate-500 text-xs block">สถานที่นัดพบ:</span><strong id="slip-location" class="text-pink-600 text-base"></strong></div>
                         <div class="col-span-2"><span class="text-slate-500 text-xs block">หัวข้อที่ขอรับคำปรึกษา:</span><strong id="slip-topic" class="text-slate-800"></strong></div>
                     </div>
                     <div class="bg-white/80 p-3.5 rounded-2xl border border-pink-100 text-xs text-slate-600">
@@ -1220,7 +1221,7 @@
                 room: document.getElementById('b-room').value,
                 number: document.getElementById('b-number').value,
                 email: document.getElementById('b-email').value.trim(),
-                phone: document.getElementById('b-phone').value.trim(),
+                phone: formatPhoneDisplay(document.getElementById('b-phone').value.trim()),
                 topic: document.getElementById('b-topic').value,
                 date: document.getElementById('b-date').value,
                 timeSlot: String(timeSlot).trim(),
@@ -1260,6 +1261,7 @@
                     showSuccessAlert('จองคิวสำเร็จ! สามารถตรวจสอบสถานะและพิมพ์ใบนัดได้ในแท็บ "เช็กสถานะ / ใบนัด"');
                     document.getElementById('track-search-input').value = newBooking.name;
                     switchTab('track');
+                    renderTrackResults(true);
                 } else {
                     await loadInitialData();
                     onBookingDateChange();
@@ -1275,18 +1277,28 @@
         // ==========================================
         // 5. ระบบเช็กสถานะ & พิมพ์ใบนัดหมาย
         // ==========================================
-        function renderTrackResults() {
+        function renderTrackResults(isSubmitted = false) {
             const container = document.getElementById('track-results-container');
             const query = document.getElementById('track-search-input').value.trim().toLowerCase();
 
-            let list = globalData.bookings;
-            if (query) {
-                list = list.filter(b =>
-                    (b.name && b.name.toLowerCase().includes(query)) ||
-                    (b.phone && b.phone.includes(query)) ||
-                    (b.id && b.id.toLowerCase().includes(query))
-                );
+            if (!query) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 bg-purple-50/40 rounded-3xl border border-purple-100 text-slate-500">
+                    <p class="font-bold text-purple-700 text-base mb-1">🔍 ค้นหาสถานะการจองคิวและใบนัดหมายของคุณ</p>
+                    <p class="text-xs text-slate-500">กรุณาพิมพ์ชื่อ-นามสกุล เบอร์โทรศัพท์ หรือรหัสคิว แล้วกดปุ่ม <strong>"ค้นหา"</strong> เพื่อแสดงข้อมูล</p>
+                </div>`;
+                if (isSubmitted) {
+                    showDialog('กรุณากรอกข้อมูลค้นหา', 'พิมพ์ชื่อ-นามสกุล หรือเบอร์โทรศัพท์ของคุณก่อนกดปุ่มค้นหาครับ');
+                }
+                return;
             }
+
+            if (!isSubmitted) return;
+
+            const list = globalData.bookings.filter(b =>
+                (b.name && b.name.toLowerCase().includes(query)) ||
+                (b.phone && b.phone.includes(query)) ||
+                (b.id && b.id.toLowerCase().includes(query))
+            );
 
             if (list.length === 0) {
                 container.innerHTML = `<div class="col-span-full text-center py-12 bg-slate-50 rounded-2xl border border-slate-200 text-slate-400">ไม่พบข้อมูลการจองที่ตรงกับคำค้นหา</div>`;
@@ -1310,7 +1322,7 @@
                             ${statusBadge}
                         </div>
                         <h3 class="font-extrabold text-slate-800 text-lg">${b.name}</h3>
-                        <p class="text-xs text-slate-500">ชั้น ${b.room} เลขที่ ${b.number || '-'} • โทร: ${b.phone}</p>
+                        <p class="text-xs text-slate-500">ชั้น ${b.room} เลขที่ ${b.number || '-'} • โทร: <span class="font-mono font-semibold text-slate-700">${formatPhoneDisplay(b.phone)}</span></p>
                         <div class="bg-gradient-to-r from-pink-50/70 to-sky-50/70 p-3.5 rounded-2xl border border-purple-100 text-sm space-y-1">
                             <p><span class="text-slate-500">หัวข้อ:</span> <strong class="text-slate-800">${b.topic}</strong></p>
                             <p><span class="text-slate-500">วัน-เวลา:</span> <strong class="text-purple-600">${formatThaiDate(b.date)}</strong> เวลา <strong class="text-sky-600">${b.timeSlot} น.</strong></p>
@@ -1352,6 +1364,7 @@
             document.getElementById('slip-id').innerText = `REF: ${b.id}`;
             document.getElementById('slip-name').innerText = b.name;
             document.getElementById('slip-room').innerText = `${b.room} (เลขที่ ${b.number || '-'})`;
+            document.getElementById('slip-phone').innerText = formatPhoneDisplay(b.phone) || '-';
             document.getElementById('slip-date').innerText = formatThaiDate(b.date);
             document.getElementById('slip-time').innerText = `${b.timeSlot} น.`;
             document.getElementById('slip-location').innerText = b.location || (b.status === 'pending' ? 'รอระบุห้องเมื่ออนุมัติ' : 'ห้องพักครู 1204');
@@ -1526,13 +1539,21 @@
 
             activeList.forEach((b, idx) => {
                 const rowBg = idx % 2 === 0 ? 'bg-white' : 'bg-pink-50/20';
+                const displayPhone = formatPhoneDisplay(b.phone);
+                const telHref = getTelHref(displayPhone);
                 let badge = b.status === 'approved' ? '<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-extrabold">ยืนยันแล้ว</span>' :
                             b.status === 'rejected' ? '<span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-extrabold">ปฏิเสธ</span>' :
                             '<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-extrabold">รอการยืนยัน</span>';
 
                 html += `<tr class="${rowBg} hover:bg-gradient-to-r hover:from-pink-50/60 hover:to-sky-50/60 transition-colors">
                     <td class="px-6 py-4 text-sm"><div class="font-extrabold text-purple-600">${formatThaiDate(b.date)}</div><div class="text-sky-600 text-xs font-semibold">${b.timeSlot} น.</div></td>
-                    <td class="px-6 py-4 text-sm"><div class="font-bold text-slate-800">${b.name}</div><div class="text-slate-500 text-xs">${b.room} | เลขที่ ${b.number || '-'} | โทร: ${b.phone}</div></td>
+                    <td class="px-6 py-4 text-sm">
+                        <div class="font-bold text-slate-800">${b.name}</div>
+                        <div class="text-slate-500 text-xs flex flex-wrap items-center gap-1.5 mt-1">
+                            <span>${b.room} | เลขที่ ${b.number || '-'}</span>
+                            ${displayPhone ? `<a href="tel:${telHref}" title="แตะเพื่อโทรออกหา ${b.name}" class="inline-flex items-center gap-1 bg-sky-100 hover:bg-sky-500 text-sky-700 hover:text-white px-2.5 py-0.5 rounded-full font-mono font-bold transition-all shadow-xs">📞 ${displayPhone}</a>` : ''}
+                        </div>
+                    </td>
                     <td class="px-6 py-4 text-sm"><div class="font-medium text-slate-700">${b.topic}</div>${b.location ? `<div class="text-xs text-pink-600 font-bold mt-0.5">📍 ${b.location}</div>` : ''}</td>
                     <td class="px-6 py-4 text-sm">${badge}</td>
                     <td class="px-6 py-4 text-right text-sm space-x-1.5 whitespace-nowrap">`;
@@ -1943,7 +1964,8 @@
         function exportBookingsCSV() {
             let csvContent = "\uFEFFรหัสคิว,ชื่อ-นามสกุล,ห้อง,เลขที่,อีเมล,เบอร์โทร,หัวข้อปรึกษา,วันที่,เวลา,สถานที่นัดพบ,สถานะ,บันทึกผล\n";
             globalData.bookings.forEach(b => {
-                csvContent += `"${b.id}","${b.name}","${b.room}","${b.number || ''}","${b.email || ''}","${b.phone}","${b.topic}","${b.date}","${b.timeSlot}","${b.location || ''}","${b.status}","${(b.note || '').replace(/"/g, '""')}"\n`;
+                const p = formatPhoneDisplay(b.phone);
+                csvContent += `"${b.id}","${b.name}","${b.room}","${b.number || ''}","${b.email || ''}","${p}","${b.topic}","${b.date}","${b.timeSlot}","${b.location || ''}","${b.status}","${(b.note || '').replace(/"/g, '""')}"\n`;
             });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -2198,16 +2220,35 @@
                 const confirmBtn = document.createElement('button');
                 confirmBtn.className = "px-6 py-2.5 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-bold text-sm shadow-md";
                 confirmBtn.innerText = "ยืนยัน";
-                confirmBtn.onclick = () => { document.getElementById('modal-dialog').classList.add('hidden'); onConfirm(); };
+                confirmBtn.onclick = () => {
+                    document.getElementById('modal-dialog').classList.add('hidden');
+                    onConfirm();
+                };
                 btnContainer.appendChild(confirmBtn);
             } else {
                 const okBtn = document.createElement('button');
-                okBtn.className = "px-6 py-2.5 bg-gradient-to-r from-pink-400 to-sky-400 text-white rounded-full font-bold text-sm shadow-md";
+                okBtn.className = "px-6 py-2.5 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-bold text-sm shadow-md";
                 okBtn.innerText = "ตกลง";
                 okBtn.onclick = () => document.getElementById('modal-dialog').classList.add('hidden');
                 btnContainer.appendChild(okBtn);
             }
             document.getElementById('modal-dialog').classList.remove('hidden');
+        }
+
+        function formatPhoneDisplay(val) {
+            if (val === null || val === undefined) return '';
+            let str = String(val).replace(/^'/, '').trim();
+            if (!str) return '';
+            const digitsOnly = str.replace(/\D/g, '');
+            if (digitsOnly.length === 9 && /^[2-9]/.test(digitsOnly)) {
+                return '0' + digitsOnly;
+            }
+            return str;
+        }
+
+        function getTelHref(phoneStr) {
+            if (!phoneStr) return '';
+            return String(phoneStr).replace(/[^\d+]/g, '');
         }
 
         function formatThaiDate(dateStr) {
