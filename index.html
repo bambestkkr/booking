@@ -301,10 +301,10 @@
             <!-- 4. หน้าผู้ดูแลระบบ -->
             <div id="view-admin" class="hidden bg-white/90 backdrop-blur-md rounded-3xl shadow-xl shadow-purple-100/60 border border-white overflow-hidden">
                 <div class="flex gap-2 p-3 border-b border-pink-100 bg-gradient-to-r from-pink-50/90 via-purple-50/90 to-sky-50/90 overflow-x-auto">
-                    <button onclick="switchAdminTab('dashboard')" id="adm-tab-dashboard" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-bold bg-gradient-to-r from-pink-400 to-purple-400 text-white shadow-sm text-sm whitespace-nowrap transition-all">แดชบอร์ดสถิติ</button>
-                    <button onclick="switchAdminTab('bookings')" id="adm-tab-bookings" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">
+                    <button onclick="switchAdminTab('bookings')" id="adm-tab-bookings" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-bold bg-gradient-to-r from-pink-400 to-purple-400 text-white shadow-sm text-sm whitespace-nowrap transition-all">
                         จัดการคิวจอง <span id="badge-pending-count" class="ml-1 bg-rose-400 text-white text-xs px-2 py-0.5 rounded-full">0</span>
                     </button>
+                    <button onclick="switchAdminTab('dashboard')" id="adm-tab-dashboard" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">แดชบอร์ดสถิติ</button>
                     <button onclick="switchAdminTab('completed')" id="adm-tab-completed" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">ประวัติให้คำปรึกษา</button>
                     <button onclick="switchAdminTab('report')" id="adm-tab-report" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">รายงาน A4</button>
                     <button onclick="switchAdminTab('students')" id="adm-tab-students" class="flex-1 py-2.5 px-4 rounded-2xl text-center font-semibold text-slate-600 hover:bg-white/80 text-sm whitespace-nowrap transition-all">ข้อมูลนักเรียน</button>
@@ -315,8 +315,14 @@
                 </div>
 
                 <div class="p-6 sm:p-8">
+                    <!-- Admin: Manage Bookings (หน้าเริ่มต้นเมื่อเข้าสู่ระบบ Admin) -->
+                    <div id="adm-content-bookings">
+                        <h3 class="text-lg font-extrabold text-slate-800 mb-4">รายการคิวจองที่รอดำเนินการ</h3>
+                        <div id="admin-bookings-table-container" class="overflow-x-auto rounded-3xl border border-purple-100 shadow-sm bg-white"></div>
+                    </div>
+
                     <!-- Admin: Dashboard -->
-                    <div id="adm-content-dashboard" class="space-y-6">
+                    <div id="adm-content-dashboard" class="hidden space-y-6">
                         <div class="flex flex-wrap justify-between items-center gap-4">
                             <div>
                                 <h3 class="text-xl font-extrabold text-slate-800">สรุปสถิติภาพรวมห้อง 1204</h3>
@@ -355,12 +361,6 @@
                                 <div id="chart-rooms" class="space-y-3.5"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Admin: Manage Bookings -->
-                    <div id="adm-content-bookings" class="hidden">
-                        <h3 class="text-lg font-extrabold text-slate-800 mb-4">รายการคิวจองที่รอดำเนินการ</h3>
-                        <div id="admin-bookings-table-container" class="overflow-x-auto rounded-3xl border border-purple-100 shadow-sm bg-white"></div>
                     </div>
 
                     <!-- Admin: Completed History -->
@@ -1440,6 +1440,7 @@
         function requestAdminAccess() {
             if (isAdminAuth) {
                 switchTab('admin');
+                switchAdminTab('bookings');
             } else {
                 document.getElementById('auth-password').value = '';
                 document.getElementById('auth-error').classList.add('hidden');
@@ -1457,6 +1458,7 @@
                 const mLogout = document.getElementById('btn-logout-mobile');
                 if (mLogout) mLogout.classList.remove('hidden');
                 switchTab('admin');
+                switchAdminTab('bookings');
             } else {
                 const err = document.getElementById('auth-error');
                 err.innerText = 'รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง';
